@@ -1,9 +1,13 @@
 import { Request } from "express";
 import { Schema, z, ZodError } from "zod";
 
-class ValidationError extends Error {
-    constructor(zod: ZodError) {
+export class ValidationError extends Error {
+    constructor(private zod: ZodError) {
         super(zod.message);
+    }
+
+    issues() {
+        return this.zod.issues;
     }
 }
 

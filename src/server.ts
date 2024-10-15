@@ -1,9 +1,10 @@
 import cors from "cors";
-import express from "express";
+import express, { NextFunction, Response } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 
 import clientRouter from "./routes/client.routes.js";
+import { ValidationError } from "./validations/validation-adapter.js";
 
 type Callback = () => Promise<void>;
 
@@ -16,6 +17,8 @@ export class Server {
         this.onBeforeStartCallbacks = [];
         this.addMiddleware();
         this.routes();
+        // @ts-ignore
+        this.app.use((err, req, res, next) => this.globalErrorHandler(err, req, res, next));
     }
 
     async start(port = 3000) {
@@ -35,6 +38,17 @@ export class Server {
     protected addParsers() {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
+    }
+
+    globalErrorHandler(err: unknown, req: Request, res: Response, next: NextFunction) {
+        if (err instanceof ValidationError) {
+            return res.status(400).json(err.issues());
+        }
+        console.error(err);
+
+        res.status(500).json({
+            message: "Error interno del servidor"
+        });
     }
 
     protected addMiddleware() {
