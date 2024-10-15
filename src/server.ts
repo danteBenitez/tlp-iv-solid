@@ -17,7 +17,8 @@ export class Server {
         this.onBeforeStartCallbacks = [];
         this.addMiddleware();
         this.routes();
-        // @ts-ignore
+        // @ts-ignore La siguiente es la signatura de un manejador de errores de Express
+        // según la documentación: https://expressjs.com/en/guide/error-handling.html
         this.app.use((err, req, res, next) => this.globalErrorHandler(err, req, res, next));
     }
 
@@ -44,8 +45,8 @@ export class Server {
         if (err instanceof ValidationError) {
             return res.status(400).json(err.issues());
         }
-        console.error(err);
 
+        console.error(err);
         res.status(500).json({
             message: "Error interno del servidor"
         });
