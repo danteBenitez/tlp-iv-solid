@@ -2,6 +2,7 @@ import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
 import { IVehicle } from "../interfaces/vehicle.interface";
 import Vehicle from "../models/vehicle.model";
 import { VehicleModel } from "../schemas/vehicle.schema";
+import { parseIntegerId } from "../utils/parse-integer-id";
 
 export class PostgresVehicleRepository implements IVehicleRepository {
     constructor(private vehicleModel: typeof Vehicle) { }
@@ -10,14 +11,18 @@ export class PostgresVehicleRepository implements IVehicleRepository {
         return this.vehicleModel.create(vehicle);
     }
 
-    findById(id: string): Promise<IVehicle | null> {
-        return this.vehicleModel.findByPk(id);
+    async findById(id: string): Promise<IVehicle | null> {
+        const parsed = parseIntegerId(id);
+        if (!parsed) return null;
+        return this.vehicleModel.findByPk(parsed);
     }
 
     async update(vehicle: IVehicle): Promise<IVehicle | null> {
+        const parsed = parseIntegerId(vehicle.id);
+        if (!parsed) return null;
         const [affected, vehicleUpdated] = await this.vehicleModel.update(vehicle, {
             where: {
-                id: vehicle.id
+                id: parsed
             },
             returning: ["id", "make", "model", "price", "year"]
         });
@@ -30,7 +35,9 @@ export class PostgresVehicleRepository implements IVehicleRepository {
     }
 
     async delete(id: string): Promise<IVehicle | null> {
-        const found = await this.vehicleModel.findByPk(id);
+        const parsed = parseIntegerId(id);
+        if (!parsed) return null;
+        const found = await this.vehicleModel.findByPk(parsed);
         if (!found) {
             return null;
         }

@@ -24,9 +24,9 @@ export const createClientSchema = z.object({
 createClientSchema._output satisfies Omit<IClient, "id">;
 
 export const clientIdSchema = z.object({
-    params: z.object({ clientId: z.number({ coerce: true, message: "ID inválido de cliente" }) })
+    params: z.object({ clientId: z.string() })
 })
 
 export const updateClientSchema = z.object({
-    body: createClientSchema.optional(),
+    body: createClientSchema.partial(),
 }).and(clientIdSchema);

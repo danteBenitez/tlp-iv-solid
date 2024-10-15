@@ -22,7 +22,7 @@ export const createVehicleSchema = z.object({
 createVehicleSchema._output satisfies Omit<IVehicle, "id">;
 
 export const vehicleIdSchema = z.object({
-    params: z.object({ vehicleId: z.number({ coerce: true, message: "ID inválido de vehículo" }) })
+    params: z.object({ vehicleId: z.string() })
 })
 
 export const updateVehicleSchema = z.object({
