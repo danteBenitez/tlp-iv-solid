@@ -1,5 +1,5 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
-import { IClient } from "../interfaces/client.interface";
+import { IClient } from "../../interfaces/client.interface";
 
 type ClientCreationAttributes = Omit<IClient, "id">;
 

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ClientService } from "../services/client.service";
-import { clientIdSchema, createClientSchema, updateClientSchema } from "../validations/client.schema";
+import { clientIdSchema, createClientSchema, updateClientSchema } from "../validations/client.validation";
 import { validateRequest, validateRequestBody } from "../validations/validation-adapter";
 
 export class ClientController {

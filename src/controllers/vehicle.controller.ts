@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { VehicleService } from "../services/vehicle.service";
 import { validateRequest, validateRequestBody } from "../validations/validation-adapter";
-import { createVehicleSchema, updateVehicleSchema, vehicleIdSchema } from "../validations/vehicle.schema";
+import { createVehicleSchema, updateVehicleSchema, vehicleIdSchema } from "../validations/vehicle.validation";
 
 export class VehicleController {
 
