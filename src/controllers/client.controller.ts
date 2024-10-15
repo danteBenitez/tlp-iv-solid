@@ -7,6 +7,16 @@ export class ClientController {
 
     constructor(private service: ClientService) { }
 
+    findAll = async (req: Request, res: Response) => {
+        const clients = await this.service.findAll();
+        if (clients.length === 0) {
+            return res.status(404).json({
+                message: "No existe ningún cliente"
+            });
+        }
+        return res.status(200).json(clients);
+    }
+
     findById = async (req: Request, res: Response) => {
         const data = await validateRequest(req, clientIdSchema);
         const client = await this.service.findOne(data.params.clientId.toString());

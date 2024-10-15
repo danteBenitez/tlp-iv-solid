@@ -11,6 +11,10 @@ export class PostgresVehicleRepository implements IVehicleRepository {
         return this.vehicleModel.create(vehicle);
     }
 
+    findAll(): Promise<IVehicle[]> {
+        return this.vehicleModel.findAll();
+    }
+
     async findById(id: string): Promise<IVehicle | null> {
         const parsed = parseIntegerId(id);
         if (!parsed) return null;
@@ -52,6 +56,10 @@ export class MongoVehicleRepository implements IVehicleRepository {
 
     async create(client: Omit<IVehicle, "id">): Promise<IVehicle> {
         return this.vehicleModel.create(client);
+    }
+
+    findAll(): Promise<IVehicle[]> {
+        return this.vehicleModel.find();
     }
 
     async update(client: Partial<IVehicle> & { id: string; }): Promise<IVehicle | null> {

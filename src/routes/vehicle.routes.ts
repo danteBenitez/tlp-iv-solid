@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { VehicleController } from "../controllers/vehicle.controller";
-import { MongoVehicleRepository } from "../repositories/vehicle.repository";
-import { VehicleModel } from "../schemas/vehicle.schema";
+import Vehicle from "../models/vehicle.model";
+import { PostgresVehicleRepository } from "../repositories/vehicle.repository";
 import { VehicleService } from "../services/vehicle.service";
 
 const router: Router = Router()
 
-const controller = new VehicleController(new VehicleService(new MongoVehicleRepository(VehicleModel)));
+const controller = new VehicleController(new VehicleService(new PostgresVehicleRepository(Vehicle)));
+
+router.get('/', controller.findAll);
 
 router.get('/:vehicleId', controller.findById);
 

@@ -7,6 +7,10 @@ import { parseIntegerId } from "../utils/parse-integer-id";
 export class PostgresClientRepository implements IClientRepository {
     constructor(private clientModel: typeof Client) { }
 
+    findAll(): Promise<IClient[]> {
+        return this.clientModel.findAll();
+    }
+
     create(client: Omit<IClient, "id">): Promise<IClient> {
         return this.clientModel.create(client);
     }
@@ -52,6 +56,10 @@ export class MongoClientRepository implements IClientRepository {
 
     async create(client: Omit<IClient, "id">): Promise<IClient> {
         return this.clientModel.create(client);
+    }
+
+    findAll(): Promise<IClient[]> {
+        return this.clientModel.find();
     }
 
     async update(client: Partial<IClient> & { id: string; }): Promise<IClient | null> {

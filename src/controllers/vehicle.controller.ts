@@ -7,43 +7,53 @@ export class VehicleController {
 
     constructor(private service: VehicleService) { }
 
+    findAll = async (req: Request, res: Response) => {
+        const vehicles = await this.service.findAll();
+        if (vehicles.length === 0) {
+            return res.status(404).json({
+                message: "No existe ningún vehículo"
+            });
+        }
+        return res.status(200).json(vehicles);
+    }
+
     findById = async (req: Request, res: Response) => {
         const data = await validateRequest(req, vehicleIdSchema);
-        const client = await this.service.findOne(data.params.vehicleId.toString());
-        if (!client) {
+        const vehicle = await this.service.findOne(data.params.vehicleId.toString());
+        if (!vehicle) {
             return res.status(404).json({
                 message: "No fue posible encontrar el vehículo"
             });
         }
-        return res.status(200).json(client);
+        return res.status(200).json(vehicle);
     }
 
 
     create = async (req: Request, res: Response) => {
         const data = await validateRequestBody(req, createVehicleSchema);
-        const client = await this.service.create(data);
-        res.status(201).json(client);
+        const vehicle = await this.service.create(data);
+        res.status(201).json(vehicle);
     }
 
     update = async (req: Request, res: Response) => {
         const data = await validateRequest(req, updateVehicleSchema);
-        const client = await this.service.update({ id: data.params.vehicleId.toString(), ...data.body });
-        if (!client) {
+        const vehicle = await this.service.update({ id: data.params.vehicleId.toString(), ...data.body });
+        if (!vehicle) {
             return res.status(404).json({
                 message: "No fue posible encontrar el vehículo"
             })
         }
-        res.status(200).json(client);
+        res.status(200).json(vehicle);
     }
 
     delete = async (req: Request, res: Response) => {
         const data = await validateRequest(req, vehicleIdSchema);
-        const client = await this.service.delete(data.params.vehicleId.toString());
-        if (!client) {
+        const vehicle = await this.service.delete(data.params.vehicleId.toString());
+        if (!vehicle) {
             return res.status(404).json({
                 message: "No fue posible encontrar el vehículo"
             })
         }
-        res.status(200).json(client);
+        res.status(200).json(vehicle);
     }
 }

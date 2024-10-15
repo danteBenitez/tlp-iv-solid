@@ -5,6 +5,10 @@ export class ClientService {
 
     constructor(private repository: IClientRepository) { }
 
+    async findAll(): Promise<IClient[]> {
+        return this.repository.findAll();
+    }
+
     async findOne(id: string): Promise<IClient | null> {
         return this.repository.findById(id);
     }

@@ -8,6 +8,8 @@ const router: Router = Router()
 
 const controller = new ClientController(new ClientService(new PostgresClientRepository(Client)));
 
+router.get('/', controller.findAll);
+
 router.get('/:clientId', controller.findById);
 
 router.post('/', controller.create);
