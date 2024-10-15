@@ -1,7 +1,7 @@
 import { IClientRepository } from "../interfaces/client-repository.interface";
 import { IClient } from "../interfaces/client.interface";
-import Client from "../models/client.model";
-import { ClientModel } from "../schemas/client.schema";
+import { ClientModel } from "../models/mongo/client.model";
+import Client from "../models/postgres/client.model";
 import { parseIntegerId } from "../utils/parse-integer-id";
 
 export class PostgresClientRepository implements IClientRepository {

@@ -1,7 +1,7 @@
 import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
 import { IVehicle } from "../interfaces/vehicle.interface";
-import Vehicle from "../models/vehicle.model";
-import { VehicleModel } from "../schemas/vehicle.schema";
+import { VehicleModel } from "../models/mongo/vehicle.model";
+import Vehicle from "../models/postgres/vehicle.model.js";
 import { parseIntegerId } from "../utils/parse-integer-id";
 
 export class PostgresVehicleRepository implements IVehicleRepository {

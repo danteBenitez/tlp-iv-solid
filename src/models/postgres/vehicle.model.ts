@@ -1,5 +1,5 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
-import { IVehicle } from "../interfaces/vehicle.interface";
+import { IVehicle } from "../../interfaces/vehicle.interface";
 
 type VehicleCreationAttributes = Omit<IVehicle, "id">;
 

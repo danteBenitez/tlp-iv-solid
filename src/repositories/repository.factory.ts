@@ -1,10 +1,10 @@
 import { config } from "../config/config.service";
 import { IClientRepository } from "../interfaces/client-repository.interface";
 import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
-import Client from "../models/client.model";
-import Vehicle from "../models/vehicle.model";
-import { ClientModel } from "../schemas/client.schema";
-import { VehicleModel } from "../schemas/vehicle.schema";
+import { ClientModel } from "../models/mongo/client.model";
+import { VehicleModel } from "../models/mongo/vehicle.model";
+import Client from "../models/postgres/client.model";
+import Vehicle from "../models/postgres/vehicle.model";
 import { MongoClientRepository, PostgresClientRepository } from "./client.repository";
 import { MongoVehicleRepository, PostgresVehicleRepository } from "./vehicle.repository";
 
