@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IClient } from "../interfaces/client.interface";
+import { IClient } from "../models/client.interface";
 
 export const createClientSchema = z.object({
     name: z.string().min(1, {

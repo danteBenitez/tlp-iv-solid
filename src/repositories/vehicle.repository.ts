@@ -1,5 +1,5 @@
 import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
-import { IVehicle } from "../interfaces/vehicle.interface";
+import { IVehicle } from "../models/vehicle.interface";
 
 export class PostgresVehicleRepository implements IVehicleRepository {
     private vehicles: IVehicle[] = [

@@ -1,4 +1,4 @@
-import { IVehicle } from "./vehicle.interface";
+import { IVehicle } from "../models/vehicle.interface";
 
 export interface IVehicleRepository {
     create(client: Omit<IVehicle, "id">): Promise<IVehicle>;

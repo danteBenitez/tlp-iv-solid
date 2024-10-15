@@ -1,5 +1,5 @@
 import { IClientRepository } from "../interfaces/client-repository.interface";
-import { IClient } from "../interfaces/client.interface";
+import { IClient } from "../models/client.interface";
 
 export class ClientService {
 

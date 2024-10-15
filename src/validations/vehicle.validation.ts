@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IVehicle } from "../interfaces/vehicle.interface";
+import { IVehicle } from "../models/vehicle.interface";
 
 export const createVehicleSchema = z.object({
     make: z.string().min(1, {
