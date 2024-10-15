@@ -3,6 +3,7 @@ import { IClient } from "../interfaces/client.interface";
 import { ClientModel } from "../models/mongo/client.model";
 import Client from "../models/postgres/client.model";
 import { parseIntegerId } from "../utils/parse-integer-id";
+import { parseObjectId } from "../utils/parse-object-id";
 
 export class PostgresClientRepository implements IClientRepository {
     constructor(private clientModel: typeof Client) { }
@@ -63,8 +64,11 @@ export class MongoClientRepository implements IClientRepository {
     }
 
     async update(client: Partial<IClient> & { id: string; }): Promise<IClient | null> {
-        const found = await this.clientModel.findOneAndUpdate({ _id: client.id }, client, {
-            new: true
+        const parsed = parseObjectId(client.id);
+        if (!parsed) return null;
+        const found = await this.clientModel.findOneAndUpdate({ _id: parsed }, client, {
+            new: true,
+            sanitizeFilter: false
         });
 
         if (!found) {
@@ -75,11 +79,15 @@ export class MongoClientRepository implements IClientRepository {
     }
 
     async findById(id: string): Promise<IClient | null> {
-        return this.clientModel.findById(id);
+        const parsed = parseObjectId(id);
+        if (!parsed) return null
+        return this.clientModel.findById(parsed);
     }
 
     async delete(id: string): Promise<IClient | null> {
-        const client = await this.clientModel.findOne({ _id: id });
+        const parsed = parseObjectId(id);
+        if (!parsed) return null
+        const client = await this.clientModel.findOne({ _id: parsed });
         if (!client) return null;
         await client.deleteOne();
         return client;

@@ -3,6 +3,7 @@ import { IVehicle } from "../interfaces/vehicle.interface";
 import { VehicleModel } from "../models/mongo/vehicle.model";
 import Vehicle from "../models/postgres/vehicle.model.js";
 import { parseIntegerId } from "../utils/parse-integer-id";
+import { parseObjectId } from "../utils/parse-object-id";
 
 export class PostgresVehicleRepository implements IVehicleRepository {
     constructor(private vehicleModel: typeof Vehicle) { }
@@ -63,7 +64,9 @@ export class MongoVehicleRepository implements IVehicleRepository {
     }
 
     async update(client: Partial<IVehicle> & { id: string; }): Promise<IVehicle | null> {
-        const found = await this.vehicleModel.findOneAndUpdate({ _id: client.id }, client, {
+        const parsed = parseObjectId(client.id);
+        if (!parsed) return null
+        const found = await this.vehicleModel.findOneAndUpdate({ _id: parsed }, client, {
             new: true
         });
 
@@ -74,14 +77,18 @@ export class MongoVehicleRepository implements IVehicleRepository {
         return found;
     }
 
-    findById(id: string): Promise<IVehicle | null> {
+    async findById(id: string): Promise<IVehicle | null> {
+        const parsed = parseObjectId(id);
+        if (!parsed) return null
         return this.vehicleModel.findById(id);
     }
 
     async delete(id: string): Promise<IVehicle | null> {
-        const client = await this.vehicleModel.findOne({ _id: id });
-        if (!client) return null;
-        client.deleteOne();
-        return client;
+        const parsed = parseObjectId(id);
+        if (!parsed) return null
+        const vehicle = await this.vehicleModel.findOne({ _id: parsed });
+        if (!vehicle) return null;
+        await vehicle.deleteOne();
+        return vehicle;
     }
 }
