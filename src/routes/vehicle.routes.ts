@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { VehicleController } from "../controllers/vehicle.controller";
-import Vehicle from "../models/vehicle.model";
-import { PostgresVehicleRepository } from "../repositories/vehicle.repository";
+import { RepositoryFactory } from "../repositories/repository.factory";
 import { VehicleService } from "../services/vehicle.service";
 
 const router: Router = Router()
 
-const controller = new VehicleController(new VehicleService(new PostgresVehicleRepository(Vehicle)));
+const controller = new VehicleController(new VehicleService(RepositoryFactory.getVehicleRepository()));
 
 router.get('/', controller.findAll);
 

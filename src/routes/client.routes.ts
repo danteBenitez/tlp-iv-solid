@@ -1,12 +1,11 @@
 import { Router } from "express";
 import { ClientController } from "../controllers/client.controller";
-import Client from "../models/client.model";
-import { PostgresClientRepository } from "../repositories/client.repository";
+import { RepositoryFactory } from "../repositories/repository.factory";
 import { ClientService } from "../services/client.service";
 
 const router: Router = Router()
 
-const controller = new ClientController(new ClientService(new PostgresClientRepository(Client)));
+const controller = new ClientController(new ClientService(RepositoryFactory.getClientRepository()));
 
 router.get('/', controller.findAll);
 
