@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { VehicleController } from "../controllers/vehicle.controller";
 import { RepositoryFactory } from "../repositories/repository.factory";
-import { VehicleService } from "../services/vehicle.service";
+import { VehicleWithDiscountService } from "../services/vehicle.service";
 
 const router: Router = Router()
 
-const controller = new VehicleController(new VehicleService(RepositoryFactory.getVehicleRepository()));
+const controller = new VehicleController(new VehicleWithDiscountService(RepositoryFactory.getVehicleRepository()));
 
 router.get('/', controller.findAll);
 
