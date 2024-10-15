@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 import clientRouter from "./routes/client.routes.js";
+import vehicleRouter from "./routes/vehicle.routes.js";
 import { ValidationError } from "./validations/validation-adapter.js";
 
 type Callback = () => Promise<void>;
@@ -34,6 +35,7 @@ export class Server {
 
     protected routes() {
         this.app.use('/clients', clientRouter);
+        this.app.use('/vehicles', vehicleRouter);
     }
 
     protected addParsers() {
