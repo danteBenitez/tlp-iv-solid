@@ -13,7 +13,7 @@ export class VehicleService {
         return this.repository.create(client);
     }
 
-    async update(client: IVehicle): Promise<IVehicle | null> {
+    async update(client: Partial<IVehicle>): Promise<IVehicle | null> {
         return this.repository.update(client);
     }
 
