@@ -1,4 +1,4 @@
-import { Column, Model, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { IClient } from "../interfaces/client.interface";
 
 type ClientCreationAttributes = Omit<IClient, "id">;
@@ -17,6 +17,6 @@ export default class Client extends Model<IClient, ClientCreationAttributes> imp
     @Column
     declare email: string;
 
-    @Column
+    @Column(DataType.BIGINT)
     declare phone_number: number;
 }

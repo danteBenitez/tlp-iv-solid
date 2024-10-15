@@ -1,4 +1,4 @@
-import { Column, Model, Table } from "sequelize-typescript";
+import { Column, DataType, Model, Table } from "sequelize-typescript";
 import { IVehicle } from "../interfaces/vehicle.interface";
 
 type VehicleCreationAttributes = Omit<IVehicle, "id">;
@@ -23,6 +23,6 @@ export default class Vehicle extends Model<IVehicle, VehicleCreationAttributes> 
     @Column
     declare year: number
 
-    @Column
+    @Column(DataType.FLOAT)
     declare price: number
 }
