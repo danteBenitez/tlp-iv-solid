@@ -6,7 +6,7 @@ export const createClientSchema = z.object({
         message: "El nombre debe tener al menos un caracter"
     }).max(255, {
         message: "El nombre debe tener hasta 255 caracteres"
-    }).regex(/^[a-zA-Z ']$/, {
+    }).regex(/^[a-zA-Záéíóú '-]+$/, {
         message: "El nombre sólo puede contener caracteres alfanuméricos, guiones, espacios y apóstrofos"
     }),
     email: z.string().min(1, {
