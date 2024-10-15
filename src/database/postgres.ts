@@ -20,7 +20,7 @@ export class PostgresDatabase implements Database {
                 host: config.HOST,
                 port: config.PORT,
                 database: config.NAME,
-                models: [path.resolve('dist/models/**/*.model.js')]
+                models: [path.resolve('dist/models/postgres/*.model.js')]
             });
             PostgresDatabase.instance = new PostgresDatabase(sequelize)
         }
