@@ -7,16 +7,6 @@ class ValidationError extends Error {
     }
 }
 
-type ValidationResult<TSchema extends Schema> = {
-    data: undefined,
-    success: false,
-    error: ValidationError
-} | {
-    data: z.infer<TSchema>,
-    success: true,
-    error: undefined
-};
-
 interface RequestValidator {
     validateRequest<TSchema extends Schema>(req: Request, schema: TSchema): Promise<z.infer<Schema>>;
     validateRequestBody<TSchema extends Schema>(req: Request, schema: TSchema): Promise<z.infer<Schema>>;
