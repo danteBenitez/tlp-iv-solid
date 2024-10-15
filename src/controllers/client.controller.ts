@@ -26,7 +26,7 @@ export class ClientController {
     }
 
     update = async (req: Request, res: Response) => {
-        const data = await validateRequestBody(req, updateClientSchema);
+        const data = await validateRequest(req, updateClientSchema);
         const client = await this.service.update({ id: data.params.clientId.toString(), ...data.body });
         if (!client) {
             return res.status(404).json({
@@ -37,7 +37,7 @@ export class ClientController {
     }
 
     delete = async (req: Request, res: Response) => {
-        const data = await validateRequestBody(req, clientIdSchema);
+        const data = await validateRequest(req, clientIdSchema);
         const client = await this.service.delete(data.params.clientId.toString());
         if (!client) {
             return res.status(404).json({
