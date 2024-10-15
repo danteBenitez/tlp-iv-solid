@@ -66,6 +66,8 @@ SALT_ROUNDS=        # Número de rondas a usar para la encriptación de las cont
 JWT_SECRET=         # Secreto para cifrar JWTs
 ```
 
+> Si desea acceder a una versión que sólo utilice una base de datos simulada, puede cambiar a la rama `simulate-db`.
+
 4. Inicia el proyecto en modo desarrollo
 
 ```bash
