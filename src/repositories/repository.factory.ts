@@ -1,10 +1,6 @@
 import { config } from "../config/config.service";
 import { IClientRepository } from "../interfaces/client-repository.interface";
 import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
-import { ClientModel } from "../models/mongo/client.model";
-import { VehicleModel } from "../models/mongo/vehicle.model";
-import Client from "../models/postgres/client.model";
-import Vehicle from "../models/postgres/vehicle.model";
 import { MongoClientRepository, PostgresClientRepository } from "./client.repository";
 import { MongoVehicleRepository, PostgresVehicleRepository } from "./vehicle.repository";
 
@@ -13,18 +9,18 @@ export class RepositoryFactory {
     static getClientRepository(): IClientRepository {
         const dialect = config.getDatabaseOptions().DIALECT;
         if (dialect == "postgres") {
-            return new PostgresClientRepository(Client);
+            return new PostgresClientRepository();
         } else {
-            return new MongoClientRepository(ClientModel);
+            return new MongoClientRepository();
         }
     }
 
     static getVehicleRepository(): IVehicleRepository {
         const dialect = config.getDatabaseOptions().DIALECT;
         if (dialect == "postgres") {
-            return new PostgresVehicleRepository(Vehicle);
+            return new PostgresVehicleRepository();
         } else {
-            return new MongoVehicleRepository(VehicleModel);
+            return new MongoVehicleRepository();
         }
     }
 

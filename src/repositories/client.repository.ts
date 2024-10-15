@@ -1,87 +1,98 @@
 import { IClientRepository } from "../interfaces/client-repository.interface";
 import { IClient } from "../interfaces/client.interface";
-import { ClientModel } from "../models/mongo/client.model";
-import Client from "../models/postgres/client.model";
-import { parseIntegerId } from "../utils/parse-integer-id";
 
 export class PostgresClientRepository implements IClientRepository {
-    constructor(private clientModel: typeof Client) { }
+    private clients: IClient[] = [
+        {
+            id: "1",
+            email: "johndoe@gmail.com",
+            name: "John Doe",
+            phone_number: 3704503824
+        },
+        {
+            id: "2",
+            email: "janedoe@gmail.com",
+            name: "Jane Doe",
+            phone_number: 3704503024
+        }
+    ];
 
-    findAll(): Promise<IClient[]> {
-        return this.clientModel.findAll();
+    constructor() {
+        console.log("Construyendo repositorio de clientes (postgres)");
     }
 
-    create(client: Omit<IClient, "id">): Promise<IClient> {
-        return this.clientModel.create(client);
+    async findAll(): Promise<IClient[]> {
+        return this.clients;
+    }
+
+    async create(client: Omit<IClient, "id">): Promise<IClient> {
+        const lastId = parseInt(this.clients.at(-1)?.id ?? '0');
+        this.clients.push({ id: (lastId + 1).toString(), ...client });
+        return this.clients.at(-1)!;
     }
 
     async findById(id: string): Promise<IClient | null> {
-        const parsed = parseIntegerId(id);
-        if (!parsed) return null;
-        return this.clientModel.findByPk(parsed);
+        return this.clients.find(c => c.id == id) ?? null;
     }
 
     async update(client: Partial<IClient> & { id: string }): Promise<IClient | null> {
-        const parsed = parseIntegerId(client.id);
-        if (!parsed) return null;
-        const [affected, clientUpdated] = await this.clientModel.update(client, {
-            where: {
-                id: parsed
-            },
-            returning: ["email", "id", "phone_number", "name"]
-        });
-
-        if (affected <= 0) {
-            return null;
-        }
-
-        return clientUpdated[0];
+        const index = this.clients.findIndex(c => c.id == client.id);
+        this.clients[index] = { ...client, ...this.clients[index] };
+        return this.clients[index];
     }
 
     async delete(id: string): Promise<IClient | null> {
-        const parsed = parseIntegerId(id);
-        if (!parsed) return null;
-        const found = await this.clientModel.findByPk(parsed);
-        if (!found) {
-            return null;
-        }
-
-        found.destroy();
-        return found;
+        const index = this.clients.findIndex(c => c.id == id);
+        const client = this.clients[index];
+        this.clients.splice(index, 1);
+        return client;
     }
 }
 
 export class MongoClientRepository implements IClientRepository {
-    constructor(private clientModel: typeof ClientModel) { }
+    private clients: IClient[] = [
+        {
+            id: "1",
+            email: "johndoe@gmail.com",
+            name: "John Doe",
+            phone_number: 3704503824
+        },
+        {
+            id: "2",
+            email: "janedoe@gmail.com",
+            name: "Jane Doe",
+            phone_number: 3704503024
+        }
+    ];
+
+    constructor() {
+        console.log("Construyendo repositorio de clientes (mongo)");
+    }
+
+    async findAll(): Promise<IClient[]> {
+        return this.clients;
+    }
 
     async create(client: Omit<IClient, "id">): Promise<IClient> {
-        return this.clientModel.create(client);
-    }
-
-    findAll(): Promise<IClient[]> {
-        return this.clientModel.find();
-    }
-
-    async update(client: Partial<IClient> & { id: string; }): Promise<IClient | null> {
-        const found = await this.clientModel.findOneAndUpdate({ _id: client.id }, client, {
-            new: true
-        });
-
-        if (!found) {
-            return null;
-        }
-
-        return found;
+        const lastId = parseInt(this.clients.at(-1)?.id ?? '0');
+        this.clients.push({ id: (lastId + 1).toString(), ...client });
+        return this.clients.at(-1)!;
     }
 
     async findById(id: string): Promise<IClient | null> {
-        return this.clientModel.findById(id);
+        return this.clients.find(c => c.id == id) ?? null;
+    }
+
+    async update(client: Partial<IClient> & { id: string }): Promise<IClient | null> {
+        const index = this.clients.findIndex(c => c.id == client.id);
+        this.clients[index] = { ...client, ...this.clients[index] };
+        return this.clients[index];
     }
 
     async delete(id: string): Promise<IClient | null> {
-        const client = await this.clientModel.findOne({ _id: id });
-        if (!client) return null;
-        await client.deleteOne();
+        const index = this.clients.findIndex(c => c.id == id);
+        const client = this.clients[index];
+        this.clients.splice(index, 1);
         return client;
     }
 }

@@ -1,87 +1,102 @@
 import { IVehicleRepository } from "../interfaces/vehicle-repository.interface";
 import { IVehicle } from "../interfaces/vehicle.interface";
-import { VehicleModel } from "../models/mongo/vehicle.model";
-import Vehicle from "../models/postgres/vehicle.model.js";
-import { parseIntegerId } from "../utils/parse-integer-id";
 
 export class PostgresVehicleRepository implements IVehicleRepository {
-    constructor(private vehicleModel: typeof Vehicle) { }
+    private vehicles: IVehicle[] = [
+        {
+            id: "1",
+            make: "Toyota",
+            model: "Corolla",
+            year: 2019,
+            price: 890.0
+        },
+        {
+            id: "2",
+            make: "Renault",
+            model: "Vectra",
+            year: 2018,
+            price: 98.0
+        }
+    ];
 
-    create(vehicle: Omit<IVehicle, "id">): Promise<IVehicle> {
-        return this.vehicleModel.create(vehicle);
+    constructor() {
+        console.log("Construyendo repositorio de vehículos (postgres)");
     }
 
-    findAll(): Promise<IVehicle[]> {
-        return this.vehicleModel.findAll();
+    async create(vehicle: Omit<IVehicle, "id">): Promise<IVehicle> {
+        const lastId = parseInt(this.vehicles.at(-1)?.id ?? '0');
+        this.vehicles.push({ id: (lastId + 1).toString(), ...vehicle });
+        return this.vehicles.at(-1)!;
+    }
+
+    async findAll(): Promise<IVehicle[]> {
+        return this.vehicles;
     }
 
     async findById(id: string): Promise<IVehicle | null> {
-        const parsed = parseIntegerId(id);
-        if (!parsed) return null;
-        return this.vehicleModel.findByPk(parsed);
+        return this.vehicles.find(c => c.id == id) ?? null;
     }
 
     async update(vehicle: IVehicle): Promise<IVehicle | null> {
-        const parsed = parseIntegerId(vehicle.id);
-        if (!parsed) return null;
-        const [affected, vehicleUpdated] = await this.vehicleModel.update(vehicle, {
-            where: {
-                id: parsed
-            },
-            returning: ["id", "make", "model", "price", "year"]
-        });
-
-        if (affected <= 0) {
-            return null;
-        }
-
-        return vehicleUpdated[0];
+        const index = this.vehicles.findIndex(c => c.id == vehicle.id);
+        this.vehicles[index] = { ...vehicle, ...this.vehicles[index] };
+        return this.vehicles[index];
     }
 
     async delete(id: string): Promise<IVehicle | null> {
-        const parsed = parseIntegerId(id);
-        if (!parsed) return null;
-        const found = await this.vehicleModel.findByPk(parsed);
-        if (!found) {
-            return null;
-        }
-
-        found.destroy();
-        return found;
+        const index = this.vehicles.findIndex(c => c.id == id);
+        const vehicle = this.vehicles[index];
+        this.vehicles.splice(index, 1);
+        return vehicle;
     }
 }
 
 export class MongoVehicleRepository implements IVehicleRepository {
-    constructor(private vehicleModel: typeof VehicleModel) { }
-
-    async create(client: Omit<IVehicle, "id">): Promise<IVehicle> {
-        return this.vehicleModel.create(client);
-    }
-
-    findAll(): Promise<IVehicle[]> {
-        return this.vehicleModel.find();
-    }
-
-    async update(client: Partial<IVehicle> & { id: string; }): Promise<IVehicle | null> {
-        const found = await this.vehicleModel.findOneAndUpdate({ _id: client.id }, client, {
-            new: true
-        });
-
-        if (!found) {
-            return null;
+    private vehicles: IVehicle[] = [
+        {
+            id: "1",
+            make: "Toyota",
+            model: "Corolla",
+            year: 2019,
+            price: 890.0
+        },
+        {
+            id: "2",
+            make: "Renault",
+            model: "Vectra",
+            year: 2018,
+            price: 98.0
         }
+    ];
 
-        return found;
+    constructor() {
+        console.log("Construyendo repositorio de vehículos (mongo)");
     }
 
-    findById(id: string): Promise<IVehicle | null> {
-        return this.vehicleModel.findById(id);
+    async create(vehicle: Omit<IVehicle, "id">): Promise<IVehicle> {
+        const lastId = parseInt(this.vehicles.at(-1)?.id ?? '0');
+        this.vehicles.push({ id: (lastId + 1).toString(), ...vehicle });
+        return this.vehicles.at(-1)!;
+    }
+
+    async findAll(): Promise<IVehicle[]> {
+        return this.vehicles;
+    }
+
+    async findById(id: string): Promise<IVehicle | null> {
+        return this.vehicles.find(c => c.id == id) ?? null;
+    }
+
+    async update(vehicle: IVehicle): Promise<IVehicle | null> {
+        const index = this.vehicles.findIndex(c => c.id == vehicle.id);
+        this.vehicles[index] = { ...vehicle, ...this.vehicles[index] };
+        return this.vehicles[index];
     }
 
     async delete(id: string): Promise<IVehicle | null> {
-        const client = await this.vehicleModel.findOne({ _id: id });
-        if (!client) return null;
-        client.deleteOne();
-        return client;
+        const index = this.vehicles.findIndex(c => c.id == id);
+        const vehicle = this.vehicles[index];
+        this.vehicles.splice(index, 1);
+        return vehicle;
     }
 }
