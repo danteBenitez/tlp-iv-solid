@@ -19,7 +19,7 @@ type ApplicationConfig = {
         USER: string;
         PASSWORD: string;
         NAME: string;
-        DIALECT: string;
+        DIALECT: "postgres" | "mongo";
     },
     PORT: string,
     SALT_ROUNDS: number,
@@ -45,7 +45,10 @@ class ConfigService {
             SALT_ROUNDS: parseInt(getEnvOrFail("SALT_ROUNDS")),
             SECRET: getEnvOrFail("JWT_SECRET")
         };
-        const service = new ConfigService(config);
+        if (config.DATABASE.DIALECT != "postgres" && config.DATABASE.DIALECT != "mongo") {
+            throw new Error("La aplicación sólo soporta los dialectos: postgres y mongo");
+        }
+        const service = new ConfigService(config as ApplicationConfig);
         return service;
     }
 
