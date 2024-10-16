@@ -37,12 +37,14 @@ export class PostgresClientRepository implements IClientRepository {
 
     async update(client: Partial<IClient> & { id: string }): Promise<IClient | null> {
         const index = this.clients.findIndex(c => c.id == client.id);
+        if (index == -1) return null;
         this.clients[index] = { ...client, ...this.clients[index] };
         return this.clients[index];
     }
 
     async delete(id: string): Promise<IClient | null> {
         const index = this.clients.findIndex(c => c.id == id);
+        if (index == -1) return null;
         const client = this.clients[index];
         this.clients.splice(index, 1);
         return client;
@@ -85,12 +87,14 @@ export class MongoClientRepository implements IClientRepository {
 
     async update(client: Partial<IClient> & { id: string }): Promise<IClient | null> {
         const index = this.clients.findIndex(c => c.id == client.id);
+        if (index == -1) return null;
         this.clients[index] = { ...client, ...this.clients[index] };
         return this.clients[index];
     }
 
     async delete(id: string): Promise<IClient | null> {
         const index = this.clients.findIndex(c => c.id == id);
+        if (index == -1) return null;
         const client = this.clients[index];
         this.clients.splice(index, 1);
         return client;

@@ -39,12 +39,14 @@ export class PostgresVehicleRepository implements IVehicleRepository {
 
     async update(vehicle: IVehicle): Promise<IVehicle | null> {
         const index = this.vehicles.findIndex(c => c.id == vehicle.id);
+        if (index == -1) return null;
         this.vehicles[index] = { ...vehicle, ...this.vehicles[index] };
         return this.vehicles[index];
     }
 
     async delete(id: string): Promise<IVehicle | null> {
         const index = this.vehicles.findIndex(c => c.id == id);
+        if (index == -1) return null;
         const vehicle = this.vehicles[index];
         this.vehicles.splice(index, 1);
         return vehicle;
@@ -89,12 +91,14 @@ export class MongoVehicleRepository implements IVehicleRepository {
 
     async update(vehicle: IVehicle): Promise<IVehicle | null> {
         const index = this.vehicles.findIndex(c => c.id == vehicle.id);
+        if (index == -1) return null;
         this.vehicles[index] = { ...vehicle, ...this.vehicles[index] };
         return this.vehicles[index];
     }
 
     async delete(id: string): Promise<IVehicle | null> {
         const index = this.vehicles.findIndex(c => c.id == id);
+        if (index == -1) return null;
         const vehicle = this.vehicles[index];
         this.vehicles.splice(index, 1);
         return vehicle;
